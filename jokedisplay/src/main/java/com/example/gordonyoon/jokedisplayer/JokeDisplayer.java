@@ -1,11 +1,14 @@
 package com.example.gordonyoon.jokedisplayer;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class JokeDisplayer extends AppCompatActivity {
+    public static final String EXTRA_JOKE = "com.example.gordonyoon.jokedisplay.jokeExtra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,5 +36,11 @@ public class JokeDisplayer extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void start(Context context, String joke) {
+        Intent intent = new Intent(context, JokeDisplayer.class);
+        intent.putExtra(EXTRA_JOKE, joke);
+        context.startActivity(intent);
     }
 }

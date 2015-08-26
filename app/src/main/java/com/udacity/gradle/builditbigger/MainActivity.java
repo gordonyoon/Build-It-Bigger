@@ -5,9 +5,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.Joker;
+import com.example.gordonyoon.jokedisplayer.JokeDisplayer;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -43,8 +43,6 @@ public class MainActivity extends ActionBarActivity {
 
     public void tellJoke(View view) {
         Joker joker = new Joker();
-        Toast.makeText(this, joker.getJoke(), Toast.LENGTH_LONG).show();
+        JokeDisplayer.start(this, joker.getJoke());
     }
-
-
 }
