@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">JokeDisplayer</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="no_jokes">Sorry, there are no jokes at this time. :(</string>
+</resources>
