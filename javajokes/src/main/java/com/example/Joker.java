@@ -2,6 +2,6 @@ package com.example;
 
 public class Joker {
     public String getJoke() {
-        return "Every wife tells her husband that he doesn't listen. To this day, I still haven't heard it from mine.";
+        return "\"They say that every wife tells her husband that he doesn't listen...I still haven't heard it from mine.\" -Jerry Seinfeld";
     }
 }
