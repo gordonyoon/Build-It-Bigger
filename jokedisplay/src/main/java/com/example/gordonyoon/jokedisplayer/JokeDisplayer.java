@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 
 
 public class JokeDisplayer extends AppCompatActivity {
-    public static final String EXTRA_JOKE = "com.example.gordonyoon.jokedisplay.jokeExtra";
+    private static final String EXTRA_JOKE = "jokeExtra";
 
     public static void start(Context context, String joke) {
         Intent intent = new Intent(context, JokeDisplayer.class);
