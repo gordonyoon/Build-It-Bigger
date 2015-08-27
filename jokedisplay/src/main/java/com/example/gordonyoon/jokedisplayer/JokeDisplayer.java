@@ -6,14 +6,33 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import butterknife.ButterKnife;
+
 
 public class JokeDisplayer extends AppCompatActivity {
     public static final String EXTRA_JOKE = "com.example.gordonyoon.jokedisplay.jokeExtra";
+
+    public static void start(Context context, String joke) {
+        Intent intent = new Intent(context, JokeDisplayer.class);
+        intent.putExtra(EXTRA_JOKE, joke);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_joke_displayer);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String joke = extras.getString(EXTRA_JOKE);
+            if (joke != null) {
+                TextView jokeText = ButterKnife.findById(this, R.id.joke_text);
+                jokeText.setText(joke);
+            }
+        }
     }
 
     @Override
@@ -36,11 +55,5 @@ public class JokeDisplayer extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public static void start(Context context, String joke) {
-        Intent intent = new Intent(context, JokeDisplayer.class);
-        intent.putExtra(EXTRA_JOKE, joke);
-        context.startActivity(intent);
     }
 }
