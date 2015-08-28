@@ -5,16 +5,21 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.gordonyoon.jokedisplayer.JokeDisplayer;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import interfaces.EndpointResultListener;
 
 
 public class MainActivity extends ActionBarActivity implements EndpointResultListener {
+    @Bind(R.id.progress_bar)
+    ProgressBar mSpinner;
     InterstitialAd mInterstitialAd;
     private boolean receivingJoke = false;
 
@@ -22,6 +27,7 @@ public class MainActivity extends ActionBarActivity implements EndpointResultLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
@@ -50,6 +56,7 @@ public class MainActivity extends ActionBarActivity implements EndpointResultLis
     @Override
     protected void onResume() {
         super.onResume();
+        mSpinner.setVisibility(View.GONE);
         receivingJoke = false;
     }
 
@@ -76,6 +83,7 @@ public class MainActivity extends ActionBarActivity implements EndpointResultLis
     }
 
     public void tellJoke(View view) {
+        mSpinner.setVisibility(View.VISIBLE);
         if (!receivingJoke) {
             if (mInterstitialAd.isLoaded()) {
                 mInterstitialAd.show();
