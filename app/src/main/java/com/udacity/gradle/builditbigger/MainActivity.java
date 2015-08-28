@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.gordonyoon.builditbigger.backend.myApi.MyApi;
+import com.example.gordonyoon.jokedisplayer.JokeDisplayer;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -24,7 +25,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -49,22 +49,19 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void tellJoke(View view) {
-//        Joker joker = new Joker();
-//        JokeDisplayer.start(this, joker.getJoke());
-
-        new EndpointsAsyncTask().execute("gordon");
+        new EndpointsAsyncTask().execute();
     }
 
-    private void showToast(String result) {
-        Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+    private void startJokeDisplayer(String joke) {
+        JokeDisplayer.start(this, joke);
     }
 
-    class EndpointsAsyncTask extends AsyncTask<String, Void, String> {
+    class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
         private final static String IP_GENYMOTION = "http://10.0.3.2:8080/_ah/api/";
         private final static String IP_ANDROID_EMULATOR = "http://10.0.2.2:8080/_ah/api/";
 
         @Override
-        protected String doInBackground(String... params) {
+        protected String doInBackground(Void... params) {
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
                     // options for running against local devappserver
@@ -80,17 +77,16 @@ public class MainActivity extends ActionBarActivity {
             // end options for devappserver
             MyApi myApiService = builder.build();
 
-            String name = params[0];
             try {
-                return myApiService.sayHi(name).execute().getData();
+                return myApiService.getJoke().execute().getData();
             } catch (IOException e) {
                 return e.getMessage();
             }
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            showToast(result);
+        protected void onPostExecute(String joke) {
+            startJokeDisplayer(joke);
         }
     }
 }
