@@ -1,21 +1,17 @@
 package com.udacity.gradle.builditbigger;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.gordonyoon.builditbigger.backend.myApi.MyApi;
 import com.example.gordonyoon.jokedisplayer.JokeDisplayer;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
-import java.io.IOException;
+import interfaces.EndpointResultListener;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements EndpointResultListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,47 +42,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void tellJoke(View view) {
-        new EndpointsAsyncTask().execute();
+        new AsyncJokeDisplayer(this).showJoke();
     }
 
-    private void startJokeDisplayer(String joke) {
+    @Override
+    public void onJokeReceived(String joke) {
         JokeDisplayer.start(this, joke);
-    }
-
-    class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
-        private final static String IP_GENYMOTION = "http://10.0.3.2:8080/_ah/api/";
-        private final static String IP_ANDROID_EMULATOR = "http://10.0.2.2:8080/_ah/api/";
-
-        @Override
-        protected String doInBackground(Void... params) {
-            // for deploying locally
-//            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
-//                    new AndroidJsonFactory(), null)
-//                    .setRootUrl(IP_GENYMOTION)
-//                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-//                        @Override
-//                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-//                            abstractGoogleClientRequest.setDisableGZipContent(true);
-//                        }
-//                    });
-
-            // for deploying on GAE
-            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
-                    new AndroidJsonFactory(), null)
-                    .setRootUrl("https://build-it-bigger-1051.appspot.com/_ah/api/");
-
-            MyApi myApiService = builder.build();
-
-            try {
-                return myApiService.getJoke().execute().getData();
-            } catch (IOException e) {
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String joke) {
-            startJokeDisplayer(joke);
-        }
     }
 }
