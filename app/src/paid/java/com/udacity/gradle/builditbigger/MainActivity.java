@@ -12,7 +12,7 @@ import interfaces.EndpointResultListener;
 
 
 public class MainActivity extends ActionBarActivity implements EndpointResultListener {
-    private boolean retrievingJoke = false;
+    private boolean receivingJoke = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class MainActivity extends ActionBarActivity implements EndpointResultLis
     @Override
     protected void onResume() {
         super.onResume();
-        retrievingJoke = false;
+        receivingJoke = false;
     }
 
     @Override
@@ -49,9 +49,9 @@ public class MainActivity extends ActionBarActivity implements EndpointResultLis
     }
 
     public void tellJoke(View view) {
-        if (!retrievingJoke) {
+        if (!receivingJoke) {
             new AsyncJokeDisplayer(this).showJoke();
-            retrievingJoke = true;
+            receivingJoke = true;
         }
     }
 
