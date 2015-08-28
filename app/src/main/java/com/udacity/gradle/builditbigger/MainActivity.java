@@ -1,13 +1,20 @@
 package com.udacity.gradle.builditbigger;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-import com.example.Joker;
-import com.example.gordonyoon.jokedisplayer.JokeDisplayer;
+import com.example.gordonyoon.builditbigger.backend.myApi.MyApi;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
+import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+
+import java.io.IOException;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -42,7 +49,48 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void tellJoke(View view) {
-        Joker joker = new Joker();
-        JokeDisplayer.start(this, joker.getJoke());
+//        Joker joker = new Joker();
+//        JokeDisplayer.start(this, joker.getJoke());
+
+        new EndpointsAsyncTask().execute("gordon");
+    }
+
+    private void showToast(String result) {
+        Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+    }
+
+    class EndpointsAsyncTask extends AsyncTask<String, Void, String> {
+        private final static String IP_GENYMOTION = "http://10.0.3.2:8080/_ah/api/";
+        private final static String IP_ANDROID_EMULATOR = "http://10.0.2.2:8080/_ah/api/";
+
+        @Override
+        protected String doInBackground(String... params) {
+            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
+                    new AndroidJsonFactory(), null)
+                    // options for running against local devappserver
+                    // - 10.0.2.2 is localhost's IP address in Android emulator
+                    // - turn off compression when running against local devappserver
+                    .setRootUrl(IP_GENYMOTION)
+                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                        @Override
+                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                            abstractGoogleClientRequest.setDisableGZipContent(true);
+                        }
+                    });
+            // end options for devappserver
+            MyApi myApiService = builder.build();
+
+            String name = params[0];
+            try {
+                return myApiService.sayHi(name).execute().getData();
+            } catch (IOException e) {
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            showToast(result);
+        }
     }
 }
