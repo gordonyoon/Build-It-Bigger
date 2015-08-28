@@ -12,11 +12,18 @@ import interfaces.EndpointResultListener;
 
 
 public class MainActivity extends ActionBarActivity implements EndpointResultListener {
+    private boolean retrievingJoke = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        retrievingJoke = false;
     }
 
     @Override
@@ -42,7 +49,10 @@ public class MainActivity extends ActionBarActivity implements EndpointResultLis
     }
 
     public void tellJoke(View view) {
-        new AsyncJokeDisplayer(this).showJoke();
+        if (!retrievingJoke) {
+            new AsyncJokeDisplayer(this).showJoke();
+            retrievingJoke = true;
+        }
     }
 
     @Override
