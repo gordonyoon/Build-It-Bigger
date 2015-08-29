@@ -49,13 +49,18 @@ public class AsyncJokeDisplayer {
             try {
                 return myApiService.getJoke().execute().getData();
             } catch (IOException e) {
-                return e.getMessage();
+                e.printStackTrace();
+                return "";
             }
         }
 
         @Override
         protected void onPostExecute(String joke) {
-            mListener.onJokeReceived(joke);
+            if (joke != null && !joke.isEmpty()) {
+                mListener.onJokeReceived(joke);
+            } else {
+                mListener.onJokeReceived("Something went wrong!");
+            }
         }
     }
 }
